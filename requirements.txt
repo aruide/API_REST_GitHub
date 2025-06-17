@@ -1,2 +1,7 @@
 python-dotenv
 requests
+pydantic
+fastapi
+uvicorn
+python-jose[cryptography]
+python-multipart
