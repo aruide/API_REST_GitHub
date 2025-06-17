@@ -6,6 +6,7 @@ import json
 from dotenv import load_dotenv
 import sys
 import io
+from config import GIT_URL_USERS, SINCE, GIT_URL_USER_INFO
 
 # Encodage UTF-8 pour éviter les erreurs d'affichage
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -66,10 +67,10 @@ def safe_request(url, max_retries=5):
 # Fonction principale pour extraire les utilisateurs
 def fetch_users(max_users):
     users_data = []
-    since = 0
+    since = SINCE
 
     while len(users_data) < max_users:
-        url = f"https://api.github.com/users?since={since}"
+        url = f"{GIT_URL_USERS}{since}"
         response = safe_request(url)
 
         if response is None:
@@ -81,7 +82,7 @@ def fetch_users(max_users):
 
         for user in users:
             login = user['login']
-            detail_url = f"https://api.github.com/users/{login}"
+            detail_url = f"{GIT_URL_USER_INFO}/{login}"
             detail_response = safe_request(detail_url)
 
             if detail_response:
