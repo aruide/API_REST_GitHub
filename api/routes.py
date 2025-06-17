@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from models import User
-from security import authenticate_user, create_access_token, get_current_user
+from .models import User
+from .security import authenticate_user, create_access_token, get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
 import os
 
 router = APIRouter()
 access_token_expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
-# Stockage temporaire des utilisateurs (à adapter selon ta logique)
+# Stockage temporaire des utilisateurs
 users_data: List[User] = []
 
 @router.get("/", summary="Page d'accueil")
@@ -19,16 +19,16 @@ async def root():
 def get_all_users(current_user: str = Depends(get_current_user)):
     return users_data
 
+@router.get("/users/search", response_model=List[User], summary="Recherche utilisateur")
+def search_users(q: str, current_user: str = Depends(get_current_user)):
+    return [user for user in users_data if q.lower() in user.login.lower()]
+
 @router.get("/users/{login}", response_model=User, summary="Détails utilisateur")
 def get_user_by_login(login: str, current_user: str = Depends(get_current_user)):
     for user in users_data:
         if user.login == login:
             return user
     raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
-
-@router.get("/users/search", response_model=List[User], summary="Recherche utilisateur")
-def search_users(q: str, current_user: str = Depends(get_current_user)):
-    return [user for user in users_data if q.lower() in user.login.lower()]
 
 @router.get("/protected", summary="Route protégée")
 async def protected_route(current_user: str = Depends(get_current_user)):

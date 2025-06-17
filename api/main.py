@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from routes import router, users_data
-from models import User
+from .routes import router, users_data
+from .models import User
 import json
 import os
 
