@@ -3,8 +3,10 @@ from typing import List
 from models import User
 from security import authenticate_user, create_access_token, get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
+import os
 
 router = APIRouter()
+access_token_expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 # Stockage temporaire des utilisateurs (à adapter selon ta logique)
 users_data: List[User] = []
@@ -28,6 +30,13 @@ def get_user_by_login(login: str, current_user: str = Depends(get_current_user))
 def search_users(q: str, current_user: str = Depends(get_current_user)):
     return [user for user in users_data if q.lower() in user.login.lower()]
 
+@router.get("/protected", summary="Route protégée")
+async def protected_route(current_user: str = Depends(get_current_user)):
+    return {"message": f"Bienvenue {current_user}, vous êtes authentifié"}
+
+
+
+
 @router.post("/token", summary="Génère un token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     username = form_data.username
@@ -39,8 +48,4 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
     token = create_access_token({"sub": username})
-    return {"access_token": token, "token_type": "bearer"}
-
-@router.get("/protected", summary="Route protégée")
-async def protected_route(current_user: str = Depends(get_current_user)):
-    return {"message": f"Bienvenue {current_user}, vous êtes authentifié"}
+    return {"access_token": token, "token_type": "bearer", "duree": f"{access_token_expire_minutes} minutes" }
