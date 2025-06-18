@@ -18,6 +18,7 @@ Postman est un outil populaire pour tester et interagir avec des APIs REST. Il p
 2. Importer la collection
     * Lance Postman.
     * Clique sur "Import" en haut à gauche.
+   
     ![import](../images/import.PNG)
     * glisser/deposer les fichiers `API_GitHub.postman_collection.json` et `API_GitHub.postman_collection.json` qui se trouve dans le dossier `postman` 
     * Clique sur **Import**.
