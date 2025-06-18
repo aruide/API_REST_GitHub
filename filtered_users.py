@@ -27,7 +27,7 @@ def remove_duplicates(users):
 # Filtrage métier
 def filter_users(users):
     filtered = []
-    date_min = datetime(2008, 1, 1, tzinfo=timezone.utc)
+    date_min = datetime(2015, 1, 1, tzinfo=timezone.utc)
 
     for user in users:
         bio = user.get("bio")
