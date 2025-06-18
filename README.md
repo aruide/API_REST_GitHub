@@ -106,7 +106,7 @@ python -m pip install -r requirements.txt
 
 ## 🚀 Lancer les pipelines
 >[!WARNING]
->Assurez-vous d'avoir mis votre token GitHub dans votre **.env**
+>Assurez-vous d'avoir mis votre token GitHub dans votre **.env** (changer le nom de **.env.example** en **.env**)
 
 ```ini
 GITHUB_TOKEN= XXXXXXXXXXX #mettre votre token
