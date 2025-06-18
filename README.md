@@ -1,4 +1,4 @@
-![banner](images/git_api.png)
+![banner](images/git_api.PNG)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
