@@ -16,8 +16,13 @@ load_dotenv()
 token = os.getenv("GITHUB_TOKEN")
 headers = {"Authorization": f"token {token}"}
 
-# Vérifie les quotas API et met en pause si nécessaire
 def check_rate_limit(response):
+    """
+    Vérifie les quotas de l'API GitHub et met le script en pause si la limite est atteinte.
+
+    Args:
+        response (requests.Response): La réponse HTTP de l'API GitHub.
+    """
     remaining = int(response.headers.get("X-RateLimit-Remaining", 0))
     reset_time = int(response.headers.get("X-RateLimit-Reset", 0))
 
@@ -27,8 +32,17 @@ def check_rate_limit(response):
             print(f"[Quota] Limite atteinte. Pause de {wait_time} secondes (~{wait_time // 60} min).")
             time.sleep(wait_time + 1)
 
-# Fonction de requête HTTP sécurisée avec gestion des erreurs
 def safe_request(url, max_retries=5):
+    """
+    Effectue une requête GET sécurisée avec gestion des erreurs, des quotas et des tentatives.
+
+    Args:
+        url (str): L'URL à interroger.
+        max_retries (int): Le nombre maximum de tentatives en cas d'erreur.
+
+    Returns:
+        requests.Response | None: La réponse HTTP en cas de succès, sinon None.
+    """
     delay = 5
     for attempt in range(max_retries):
         try:
@@ -64,8 +78,16 @@ def safe_request(url, max_retries=5):
 
     return None
 
-# Fonction principale pour extraire les utilisateurs
 def fetch_users(max_users):
+    """
+    Récupère les profils d'utilisateurs GitHub via l'API publique jusqu'à atteindre le nombre demandé.
+
+    Args:
+        max_users (int): Nombre maximum d'utilisateurs à récupérer.
+
+    Returns:
+        list[dict]: Liste de dictionnaires contenant les données des utilisateurs.
+    """
     users_data = []
     since = SINCE
 
@@ -104,15 +126,23 @@ def fetch_users(max_users):
 
     return users_data
 
-# Fonction d'enregistrement JSON
 def save_to_json(data, path="data/users.json"):
+    """
+    Enregistre une liste d'utilisateurs au format JSON dans le fichier spécifié.
+
+    Args:
+        data (list): Les données à enregistrer.
+        path (str): Le chemin du fichier JSON de sortie.
+    """
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
     print(f"\n✅ Données enregistrées dans {path}")
 
-# Point d'entrée du script
 if __name__ == "__main__":
+    """
+    Point d'entrée principal du script. Parse les arguments et lance l'extraction puis l'enregistrement des utilisateurs GitHub.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--max-users", type=int, default=30, help="Nombre d'utilisateurs à récupérer")
     args = parser.parse_args()
