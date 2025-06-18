@@ -142,6 +142,27 @@ python filtered_users.py
 uvicorn api.main:app --reload
 ```
 
+## 🌐 Tester l'API depuis une page web (Swagger)
+
+vous pouvez tester via cette url (**le serveur doit être lancer**):
+[http://localhost:8000/docs](http://localhost:8000/docs)
+
+pour pouvoir tester les routes avec l'identification du token vous devez cliquer sur ce bouton:
+
+![url_bouton](images/url_bouton.PNG)
+
+ensuite remplir les champs **username** et **password** avec les valeurs qui se trouve dans le `.env`:\
+**username** → admin123\
+**password** → password
+
+![page_connexion](images/page_connexion.png)
+
+normalement quand vous appuyer sur le bouton **Authorize** cela vous confirme votre connexion:
+
+![connexion_valide](images/connexion_valide.PNG)
+
+>cette connexion utilise la route `/token` pour generer un token lors de l'utilisation des routes dans l'url
+
 ## 📝 Explications
 * 🛠️ [Extraction et Filtrage des Données GitHub](document_README/filtrage.md) – Scripts pour collecter et nettoyer les utilisateurs depuis l’API GitHub.
 
