@@ -1,10 +1,35 @@
 """
-Tests automatisés de l'API GitHub Users avec FastAPI et pytest.
+Tests automatisés de l'API GitHub Users avec FastAPI et Pytest
 
-Ce fichier couvre :
-- L'authentification (valide/invalide)
-- Les endpoints utilisateurs (/users/, /users/{login}, /users/search)
-- La route protégée (/protected)
+Ce fichier couvre les principales fonctionnalités de l'API, notamment :
+
+Authentification :
+---------------------
+- Génération de token invalide (mauvais identifiants)
+- Génération de token valide avec credentials du .env
+
+Utilisateurs :
+-----------------
+- Récupération de tous les utilisateurs (/users/)
+- Récupération d’un utilisateur spécifique (/users/{login})
+- Gestion des utilisateurs inexistants (404)
+- Recherche d’utilisateurs via query (/users/search?q=...)
+
+Routes protégées :
+---------------------
+- Accès à la route /protected pour un utilisateur authentifié
+
+Setup des tests :
+--------------------
+- TestClient utilisé pour simuler les appels API
+- Auth désactivée via override de `get_current_user`
+- Préchargement d'une fausse base utilisateur avec un `pytest.fixture(autouse=True)`
+
+À lancer avec :
+------------------
+pytest tests/test_routes.py
+
+Remarque : nécessite un fichier `.env` valide contenant `ADMIN` et `PASSWD`.
 """
 
 import pytest

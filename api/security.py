@@ -45,7 +45,7 @@ def authenticate_user(username: str, password: str) -> bool:
         bool: True si les identifiants sont valides, sinon False.
     """
     correct_password = USERS.get(username)
-    return correct_password and secrets.compare_digest(password, correct_password)
+    return bool(correct_password and secrets.compare_digest(password, correct_password))
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     """
