@@ -2,8 +2,16 @@ import json
 import os
 from datetime import datetime, timezone
 
-# Chargement des utilisateurs depuis le fichier JSON
 def load_users(filepath):
+    """
+    Charge les utilisateurs depuis un fichier JSON et vérifie la structure minimale requise.
+
+    Args:
+        filepath (str): Chemin du fichier JSON contenant les utilisateurs.
+
+    Returns:
+        list[dict]: Liste d'utilisateurs valides.
+    """
     with open(filepath, "r", encoding="utf-8") as f:
         users = json.load(f)
 
@@ -17,17 +25,36 @@ def load_users(filepath):
             print(f"[⚠️  Ignoré] Structure invalide : {user}")
     return cleaned
 
-# Suppression des doublons par ID
 def remove_duplicates(users):
+    """
+    Supprime les doublons dans une liste d'utilisateurs en se basant sur l'ID unique.
+
+    Args:
+        users (list[dict]): Liste des utilisateurs.
+
+    Returns:
+        tuple[list[dict], int]: Liste des utilisateurs uniques et nombre de doublons supprimés.
+    """
     unique_users = {}
     for user in users:
         unique_users[user["id"]] = user
     return list(unique_users.values()), len(users) - len(unique_users)
 
-# Filtrage métier
 def filter_users(users):
+    """
+    Applique un filtrage métier sur les utilisateurs :
+    - Avatar présent
+    - Bio présente
+    - Compte créé après le 1er janvier 2015
+
+    Args:
+        users (list[dict]): Liste des utilisateurs uniques.
+
+    Returns:
+        list[dict]: Liste des utilisateurs filtrés.
+    """
     filtered = []
-    date_min = datetime(2008, 1, 1, tzinfo=timezone.utc)
+    date_min = datetime(2015, 1, 1, tzinfo=timezone.utc)
 
     for user in users:
         bio = user.get("bio")
@@ -49,14 +76,27 @@ def filter_users(users):
 
     return filtered
 
-# Sauvegarde des utilisateurs filtrés
 def save_filtered_users(users, output_path):
+    """
+    Sauvegarde les utilisateurs filtrés dans un fichier JSON.
+
+    Args:
+        users (list[dict]): Liste d'utilisateurs à sauvegarder.
+        output_path (str): Chemin de sortie du fichier JSON.
+    """
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(users, f, indent=4, ensure_ascii=False)
 
-# Script principal
 if __name__ == "__main__":
+    """
+    Point d'entrée du script :
+    - Charge les utilisateurs
+    - Supprime les doublons
+    - Filtre les utilisateurs
+    - Sauvegarde le résultat final
+    - Affiche un résumé du traitement
+    """
     input_file = "data/users.json"
     output_file = "data/filtered_users.json"
 
